@@ -1,4 +1,4 @@
-load data infile '/home/sean/Documents/retrosheet/retrosheet/data/parsed/games${year}.csv' into table games_bck fields terminated by ',' optionally enclosed by '"' LINES TERMINATED BY '\r\n'
+load data infile '../data/parsed/games${year}.csv' into table games_bck fields terminated by ',' optionally enclosed by '"' LINES TERMINATED BY '\r\n'
 (GAME_ID,
 GAME_DT,
 GAME_CT,
