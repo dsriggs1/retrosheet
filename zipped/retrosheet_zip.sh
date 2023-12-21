@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Define the start year
-start_year=1952
+# This script downloads the retrosheet zip files for a given year, unzips them
+# and places them in the unzipped folder.
 
-# Ask the user to input the end year
-echo "Enter the end year:"
-read end_year
+start_year=$1
+end_year=$2
 
 # Loop from start year to end year
 for (( year=$start_year; year<=$end_year; year++ ))
@@ -15,6 +14,6 @@ do
 
   # Download the zip file for the current year
   wget "$url"
-  unzip "${year}eve.zip" -d ~/Documents/retrosheet/retrosheet/data/unzipped
+  unzip "${year}eve.zip" -d ../unzipped
 
 done
