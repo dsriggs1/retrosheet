@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# Loop through years between 1952 and 2022
-for year in {1952..2022}
+# Define the start year
+start_year=1952
+
+# Ask the user to input the end year
+echo "Enter the end year:"
+read end_year
+
+# Loop from start year to end year
+for (( year=$start_year; year<=$end_year; year++ ))
 do
   # Form the URL of the zip file for the current year
   url="http://www.retrosheet.org/events/${year}eve.zip"
