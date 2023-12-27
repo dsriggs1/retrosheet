@@ -1,16 +1,33 @@
 #!/bin/bash
 
-start_year=$1
-end_year=$2
+# Prompt for database credentials
+read -sp "Enter your database password: " PASSWORD
+echo
 
-commands=""
+# Directory where your CSV files are located
+CSV_DIR="../data/parsed"
 
-# Loop from start year to end year
-for (( year=$start_year; year<=$end_year; year++ ))
+# Path to the SQL file containing the LOAD DATA INFILE command
+SQL_FILE="./load_events.sql"
+
+# Loop through each CSV file in the directory
+for CSV_FILE in $CSV_DIR/all*.csv
 do
-    commands+="source ./load_events.sql $year;"
-    commands+="source ./load_games.sql $year;"
+    echo "Loading file $CSV_FILE into database..."
+
+    # Read the SQL command from the file
+    SQL_CMD=$(cat "${SQL_FILE}")
+
+    # Replace a placeholder in SQL_CMD with the current CSV file path
+    SQL_CMD=${SQL_CMD//__FILEPATH__/${CSV_FILE}}
+
+    # Execute the command
+    if sudo mariadb -u root -p"$PASSWORD" -e "$SQL_CMD"
+    then
+        echo "Successfully loaded file $CSV_FILE into database."
+    else
+        echo "Error: Could not load file $CSV_FILE into database."
+    fi
 done
 
-# Execute the commands in MySQL
-mariadb -u root -p retrosheet -e "$commands"
+echo "Processing of files complete."
