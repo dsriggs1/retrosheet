@@ -16,12 +16,12 @@ if [ "$full_history" == "y" ]; then
     read end_year
     
     ../zipped/retrosheet_zip.sh $start_year $end_year
-    ../unzipped/cwbat.sh $start_year $end_year
+    ./cwbat.sh $start_year $end_year
     sudo mariadb -u root -p <<EOF
 source ./retrosheet_table_schema.sql
 source ./partition.sql
-EOF  
-    ./run_data_load.sh $start_year $end_year
+EOF
+    ./run_data_load.sh
 else
     echo "Running incremental history"
     echo "What year do you want to start from?"
@@ -31,6 +31,15 @@ else
     # Adding only recent years
  
     ../zipped/retrosheet_zip.sh $start_year $end_year
-    ../unzipped/cwbat.sh $start_year $end_year
-    ./run_data_load.sh $start_year $end_year
+    ./cwbat.sh $start_year $end_year
+    ./run_data_load.sh
 fi
+
+#Post-processing clean-up
+
+find ../unzipped/ -type f ! -name "*.sh" ! -name "*.txt" -exec rm {} +
+find ../zipped/ -type f ! -name "*.sh" ! -name "*.txt" -exec rm {} +
+rm ../data/parsed/*.csv
+
+
+
